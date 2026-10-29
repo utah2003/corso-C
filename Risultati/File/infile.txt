@@ -1,0 +1,5 @@
+cane
+uomo
+albero
+gatto
+porta
