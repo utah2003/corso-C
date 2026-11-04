@@ -26,12 +26,12 @@ void termina(const char *messaggio)
 //* FUNZIONE PRINCIPALE
 int main(int argc, char *argv[]) 
 {   
-    // Controllo di sicurezza che rassicura il compilatore
-    int num_coppie = (argc - 1) / 2;
-    if (num_coppie <= 0) {
+    if (argc <= 2) {
         termina("Nessuna coppia valida trovata.");
     }
     if(argc % 2 == 0 || argc == 1)termina("inserire un numero pari di numeri");
+
+    //! ------- CREAZIONE ARRAY DI COPPIE DAI PARAMETRI ------
 
     coppia *array_coppie = malloc(((argc-1)/2)*sizeof(coppia));
     if(array_coppie == NULL)termina("malloc fallito!");
@@ -50,12 +50,14 @@ int main(int argc, char *argv[])
     if(array_ordinato_coppie == NULL)termina("malloc fallito");
     int numero_coppie_ordinate = 0;
 
-    coppia min_coppia = array_coppie[0];
-
     int indice_elemento_eliminato;
+    coppia min_coppia;
 
-    while(numero_coppie_ordinate != indice_coppia_array){
+    int totale_coppie = indice_coppia_array;
 
+    while(numero_coppie_ordinate != totale_coppie){
+
+        min_coppia = array_coppie[0];
         indice_elemento_eliminato = 0;
 
         for(int i = 1; i < indice_coppia_array; i++)
@@ -65,21 +67,33 @@ int main(int argc, char *argv[])
                 indice_elemento_eliminato = i;
             }
         }
-        printf("i: %d --> (%d,%d)\n",indice_elemento_eliminato,min_coppia.primo,min_coppia.secondo);
-        
-        //! ----> OUTPUT coppia minore con indice salvato per essere eleiminata dal vecchio array e aggiunta a nuovo!
+        //printf("i: %d --> (%d,%d)\n",indice_elemento_eliminato,min_coppia.primo,min_coppia.secondo);    
+        //? ----> OUTPUT coppia minore con indice salvato per essere eleiminata dal vecchio array e aggiunta a nuovo!
+        //*-- ADESSO HO:
+        //*-- L INDICE DELLA COPPIA DA ELIMNARE;
+        //*-- LA COPPIA DA ELIMINARE;
+
+        //! --- MODIFICA ARRAY_COPPIE TOGLIENDO LA COPPIA SALVATA MINORE -----
+        for(int z=indice_elemento_eliminato; z < indice_coppia_array; z++){
+            array_coppie[z] = array_coppie[z+1];
+        }
+        indice_coppia_array--;
+
+        printf("tolta la coppia minore:\n");
+        for(int i=0; i<indice_coppia_array;i++){
+            printf("i: %d --> (%d,%d)\n",i,array_coppie[i].primo,array_coppie[i].secondo);
+        }
 
         array_ordinato_coppie[numero_coppie_ordinate] = min_coppia;
-
-        if( numero_coppie_ordinate >=0 && numero_coppie_ordinate < indice_coppia_array){
-            for(int j=indice_elemento_eliminato; j<indice_coppia_array-1;j++){
-                array_coppie[j] = array_coppie[j+1];
-            }
-            indice_coppia_array --;
-        }
+        numero_coppie_ordinate++;
     }
 
-    printf("(%d,%d)\n",min_coppia.primo, min_coppia.secondo);
+    //printf("(%d,%d)\n",min_coppia.primo, min_coppia.secondo);
+
+    printf("ARRAY DI COPPIE ORDINATE:\n");
+    for(int i=0; i<numero_coppie_ordinate;i++){
+        printf("i: %d, (%d,%d)\n",i,array_ordinato_coppie[i].primo,array_ordinato_coppie[i].secondo);
+    }
     
     free(array_coppie);
     free(array_ordinato_coppie);
